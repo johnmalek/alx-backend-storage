@@ -12,12 +12,11 @@ def update_topics(mongo_collection, name, topics):
     name: name to be affected
     topics: changes to be made
     """
-    docs = mongo_collection.update_many({
-        "name": name
+    return mongo_collection.update_many({
+            "name": name
         },
         {
-            $set: {
+            "$set:": {
                 "topics": topics
-                }
+            }
         })
-    return docs
