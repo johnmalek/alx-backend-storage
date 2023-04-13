@@ -5,6 +5,24 @@ A python class
 import redis
 import uuid
 from typing import Union, Callable
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """
+    count how many times methods of the
+    Cache class are called
+    """
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        decorated function and return the wrapper
+        """
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -18,6 +36,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         method that takes a data argument and returns a string
