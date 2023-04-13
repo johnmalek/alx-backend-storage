@@ -16,6 +16,9 @@ def url_access(method):
     """
     @wraps(method)
     def wrapper(url):
+        """
+        decorate the function and return the wrapper
+        """
         cached_key = "cached:" + url
         cached_data = st.get(cached_key)
         if cached_data:
